@@ -1,0 +1,243 @@
+CREATE OR REPLACE PACKAGE BODY ICIM.ICIM_UTILITIES
+AS
+    ---======================================================================
+    --  Package to hold generic procedures used throughout ICIM.
+    --
+    -- V12.00.000 29-AUG-2019 (JW) - SCR 27471 Original Version - Add NONPRINTABLE_CHAR
+    G_NONPRINTABLE   VARCHAR2 (255); -- private global to store shared string of non-printable ascii characters
+
+    PROCEDURE SET_NONPRINTABLE                                      -- PRIVATE
+    IS
+    -- CALLED BY LOCAL FUNCTIONS NEEDING THE GLOBAL  G_NONPRINTABLE
+    BEGIN
+        G_NONPRINTABLE := -- assign the non-printable characters in one statement
+               CHR (0)
+            || CHR (1)
+            || CHR (2)
+            || CHR (3)
+            || CHR (4)
+            || CHR (5)
+            || CHR (6)
+            || CHR (7)
+            || CHR (8)
+            || CHR (9)
+            || CHR (10)
+            || CHR (11)
+            || CHR (12)
+            || CHR (13)
+            || CHR (14)
+            || CHR (15)
+            || CHR (16)
+            || CHR (17)
+            || CHR (18)
+            || CHR (19)
+            || CHR (20)
+            || CHR (21)
+            || CHR (22)
+            || CHR (23)
+            || CHR (24)
+            || CHR (25)
+            || CHR (26)
+            || CHR (27)
+            || CHR (28)
+            || CHR (29)
+            || CHR (30)
+            || CHR (31)
+            || CHR (127)
+            || CHR (128)
+            || CHR (129)
+            || CHR (130)
+            || CHR (131)
+            || CHR (132)
+            || CHR (133)
+            || CHR (134)
+            || CHR (135)
+            || CHR (136)
+            || CHR (137)
+            || CHR (138)
+            || CHR (139)
+            || CHR (140)
+            || CHR (141)
+            || CHR (142)
+            || CHR (143)
+            || CHR (144)
+            || CHR (145)
+            || CHR (146)
+            || CHR (147)
+            || CHR (148)
+            || CHR (149)
+            || CHR (150)
+            || CHR (151)
+            || CHR (152)
+            || CHR (153)
+            || CHR (154)
+            || CHR (155)
+            || CHR (156)
+            || CHR (157)
+            || CHR (158)
+            || CHR (159)
+            || CHR (160)
+            || CHR (161)
+            || CHR (162)
+            || CHR (163)
+            || CHR (164)
+            || CHR (165)
+            || CHR (166)
+            || CHR (167)
+            || CHR (168)
+            || CHR (169)
+            || CHR (170)
+            || CHR (171)
+            || CHR (172)
+            || CHR (173)
+            || CHR (174)
+            || CHR (175)
+            || CHR (176)
+            || CHR (177)
+            || CHR (178)
+            || CHR (179)
+            || CHR (180)
+            || CHR (181)
+            || CHR (182)
+            || CHR (183)
+            || CHR (184)
+            || CHR (185)
+            || CHR (186)
+            || CHR (187)
+            || CHR (188)
+            || CHR (189)
+            || CHR (190)
+            || CHR (191)
+            || CHR (192)
+            || CHR (193)
+            || CHR (194)
+            || CHR (195)
+            || CHR (196)
+            || CHR (197)
+            || CHR (198)
+            || CHR (199)
+            || CHR (200)
+            || CHR (201)
+            || CHR (202)
+            || CHR (203)
+            || CHR (204)
+            || CHR (205)
+            || CHR (206)
+            || CHR (207)
+            || CHR (208)
+            || CHR (209)
+            || CHR (210)
+            || CHR (211)
+            || CHR (212)
+            || CHR (213)
+            || CHR (214)
+            || CHR (215)
+            || CHR (216)
+            || CHR (217)
+            || CHR (218)
+            || CHR (219)
+            || CHR (220)
+            || CHR (221)
+            || CHR (222)
+            || CHR (223)
+            || CHR (224)
+            || CHR (225)
+            || CHR (226)
+            || CHR (227)
+            || CHR (228)
+            || CHR (229)
+            || CHR (230)
+            || CHR (231)
+            || CHR (232)
+            || CHR (233)
+            || CHR (234)
+            || CHR (235)
+            || CHR (236)
+            || CHR (237)
+            || CHR (238)
+            || CHR (239)
+            || CHR (240)
+            || CHR (241)
+            || CHR (242)
+            || CHR (243)
+            || CHR (244)
+            || CHR (245)
+            || CHR (246)
+            || CHR (247)
+            || CHR (248)
+            || CHR (249)
+            || CHR (250)
+            || CHR (251)
+            || CHR (252)
+            || CHR (253)
+            || CHR (254)
+            || CHR (255);
+    END SET_NONPRINTABLE;
+
+    FUNCTION NONPRINTABLE_CHAR (TEST_STR_IN VARCHAR2)
+        RETURN VARCHAR2
+    AS
+        --
+        --  Function returns 'TRUE' if any non-printable ascii character is found in TESTSTR_IN.
+
+        /*
+         test calls
+         DECLARE
+          TEST_FAIL VARCHAR2(100);
+          TEST_PASS VARCHAR2(100);
+          TEST_RESULT VARCHAR2(10);
+         BEGIN
+         TEST_FAIL := 'A'||chr(10)||'B';
+         TEST_PASS := 'Ab1254!@#$%^&*()_+{}|":?><,./;]\[=-~`';
+         TEST_RESULT := ICIM_UTILITIES.NONPRINTABLE_CHAR(TEST_FAIL);
+         DBMS_OUTPUT.PUT_LINE ('FAIL STRING RETURNED '|| TEST_RESULT );
+         TEST_RESULT := ICIM_UTILITIES.NONPRINTABLE_CHAR(TEST_PASS);
+         DBMS_OUTPUT.PUT_LINE ('PASS STRING RETURNED '|| TEST_RESULT );
+        END;
+        */
+        L_AFTER_STRING   VARCHAR2 (32767);
+        L_RET_VAL        VARCHAR2 (10);
+    BEGIN
+        L_RET_VAL := 'FALSE';
+        SET_NONPRINTABLE;         -- initial the search string  G_NONPRINTABLE
+        L_AFTER_STRING := TRANSLATE (TEST_STR_IN, G_NONPRINTABLE, CHR (0));
+
+        -- if strings do not match a search character was found and translated
+        IF L_AFTER_STRING != TEST_STR_IN
+        THEN
+            L_RET_VAL := 'TRUE';
+        END IF;
+
+        RETURN (L_RET_VAL);
+    END NONPRINTABLE_CHAR;
+
+    --
+    FUNCTION NONPRINTABLE_STRIP (SOURCE_STR_IN VARCHAR2)
+        RETURN VARCHAR2
+    AS
+        --
+        --  Function return SOURCE_STR_IN stripped of any non-printable ascii characters.
+
+        /*
+         test calls
+         DECLARE
+          TEST_IN VARCHAR2(100);
+          TEST_OUT VARCHAR2(100);
+          TEST_RESULT VARCHAR2(100);
+         BEGIN
+         TEST_IN  := 'A'||chr(10)||CHR (238)||'B';
+
+         TEST_OUT := ICIM_UTILITIES.NONPRINTABLE_STRIP(TEST_IN);
+         DBMS_OUTPUT.PUT_LINE ('IN_LENGTH:'||LENGTH( TEST_IN));
+         DBMS_OUTPUT.PUT_LINE ('OUT_LENGTH:'||LENGTH(TEST_OUT ));
+        END;
+        */
+
+        L_AFTER_STRING   VARCHAR2 (32767);
+    BEGIN
+        SET_NONPRINTABLE;         -- initial the search string  G_NONPRINTABLE
+        L_AFTER_STRING := TRANSLATE (SOURCE_STR_IN, G_NONPRINTABLE, CHR (0));
+        RETURN (L_AFTER_STRING);
+    END NONPRINTABLE_STRIP;
+END ICIM_UTILITIES;
+/
